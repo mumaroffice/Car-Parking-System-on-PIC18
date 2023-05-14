@@ -1,0 +1,399 @@
+#include <PIC18F452.h>
+#define front PORTBbits.RB4
+#define back  PORTBbits.RB5
+#define car1 PORTBbits.RB0
+#define car2 PORTBbits.RB1
+#define car3 PORTBbits.RB2
+void Readsensor();
+void delay(unsigned int);
+void lcd_cmd(unsigned char);
+void lcd_data(unsigned char);
+void lcd_d1(unsigned int);
+#define ldata PORTC
+#define RS PORTDbits.RD0
+#define RW PORTDbits.RD1
+#define EN PORTDbits.RD2
+void always();
+void status1();
+void status2();
+void status3();
+void status4();
+void slots();
+void clk();
+void anti();
+int S1=0, S2=0, S3=0;
+int F1=0, F2=0; 
+int slot = 3;  
+int total=0;
+#define c1 PORTDbits.RD3
+#define c2 PORTDbits.RD4
+
+
+void main()
+{
+    
+   
+    TRISB=1;
+    TRISC=0;
+    TRISD=0;
+    TRISDbits.TRISD3=0;
+    TRISDbits.TRISD3=0;
+    Readsensor();
+    anti();
+    always();
+    status1();
+    slots();
+    status2();
+    status3();
+    status4();
+    anti();
+    clk();
+    
+}
+
+void Readsensor()
+{
+S1=0, S2=0, S3=0;
+if(car1 == 1)
+{S1=1;
+}
+if(car2 == 1)
+{S2=1;
+}
+if(car3 == 1)
+{S3=1;
+}
+
+if(front == 1)
+{
+    F1=1;
+}
+if(back == 1)
+{
+    F2=1;
+}
+
+}
+void delay(unsigned int time)
+{
+    unsigned int i;
+    unsigned char j;
+    for(i=0; i<time; i++)
+    {
+        for (j=0; j<135; j++);
+    }
+}
+void lcd_cmd(unsigned char value)
+{
+    ldata = value;
+    RS = 0;
+    RW=0;
+    EN=1;
+    delay(1);
+    EN=0;
+ }
+void lcd_data(unsigned char letter)
+{
+    ldata=letter;
+    RS=1;
+    RW=0;
+    EN=1;
+    delay(1);
+    EN=0;
+}
+void lcd_d1(unsigned int x)
+{
+    ldata=x;
+    RS=1;
+    RW=0;
+    EN=1;
+    delay(1);
+    EN=0;
+}
+void slots()
+{
+    total=S1+S2+S3;
+    if(total==2)
+       {
+       EN =0;
+      lcd_cmd(0x38);
+      lcd_cmd(0x0C);
+      lcd_cmd(0x0E4);
+      lcd_d1('1');
+      lcd_d1(' ');
+      lcd_d1(' ');
+      lcd_d1(' ');
+       }
+    if(total==1)
+       {
+       EN =0;
+      lcd_cmd(0x38);
+      lcd_cmd(0x0C);
+      lcd_cmd(0x0E4);
+      lcd_d1('2');
+      lcd_d1(' ');
+      lcd_d1(' ');
+      lcd_d1(' ');
+       }
+    if(total==0)
+       {
+       EN =0;
+      lcd_cmd(0x38);
+      lcd_cmd(0x0C);
+      lcd_cmd(0x0E4);
+      lcd_d1('3');
+      lcd_d1(' ');
+      lcd_d1(' ');
+      lcd_d1(' ');
+       }
+}
+void always()
+{
+    EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x80);
+      delay(5);
+      lcd_data('C');
+      lcd_data('A');
+      lcd_data('R');
+      lcd_data(' ');
+      lcd_data('P');
+      lcd_data('A');
+      lcd_data('R');
+      lcd_data('K');
+      lcd_data('I');
+      lcd_data('N');
+      lcd_data('G');
+      lcd_data(' ');
+      lcd_data('S');
+      lcd_data('Y');
+      lcd_data('S');
+      lcd_data('T');
+      lcd_data('E');
+      lcd_data('M');
+    
+}
+void status1()
+{
+    
+     if(S1==1&&S2==1&&S3==1)
+    {
+         EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x0D4);
+      delay(5);
+      lcd_data('A');
+      lcd_data('L');
+      lcd_data('L');
+      lcd_data(' ');
+      lcd_data('S');
+      lcd_data('L');
+      lcd_data('O');
+      lcd_data('T');
+      lcd_data('S');
+      lcd_data(' ');
+      lcd_data('A');
+      lcd_data('R');
+      lcd_data('E');
+      lcd_data(' ');
+      lcd_data('B');
+      lcd_data('O');
+      lcd_data('O');
+      lcd_data('K');
+      lcd_data('E');
+      lcd_data('D');
+    }
+     else
+     {
+          EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x0D4);
+      delay(5);
+      lcd_data('A');
+      lcd_data('V');
+      lcd_data('A');
+      lcd_data('I');
+      lcd_data('L');
+      lcd_data('A');
+      lcd_data('B');
+      lcd_data('L');
+      lcd_data('E');
+      lcd_data(' ');
+      lcd_data('S');
+      lcd_data('L');
+      lcd_data('O');
+      lcd_data('T');
+      lcd_data('S');
+      lcd_data('=');
+      
+     }
+}
+void status2()
+{
+    if(S1==1)
+    {
+      EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x0C0);
+      delay(5);
+      lcd_data('S');
+      lcd_data('1');
+      lcd_data('=');
+      lcd_data('F');
+      lcd_data('I');
+      lcd_data('L');
+      lcd_data('L');
+      lcd_data(' ');
+      lcd_data(',');
+    }
+    else
+    {
+        EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0xC0);
+      delay(5);
+      lcd_data('S');
+      lcd_data('1');
+      lcd_data('=');
+      lcd_data('E');
+      lcd_data('M');
+      lcd_data('P');
+      lcd_data('T');
+      lcd_data('Y');
+      lcd_data(',');
+    }
+}
+void status3()
+{
+     if(S2==1)
+    {
+      EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x0C9);
+      delay(5);
+      lcd_data('S');
+      lcd_data('2');
+      lcd_data('=');
+      lcd_data('F');
+      lcd_data('I');
+      lcd_data('L');
+      lcd_data('L');
+      lcd_data(' ');
+    }
+    else
+    {
+        EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x0C9);
+      delay(5);
+      lcd_data('S');
+      lcd_data('2');
+      lcd_data('=');
+      lcd_data('E');
+      lcd_data('M');
+      lcd_data('P');
+      lcd_data('T');
+      lcd_data('Y');
+    }   
+}
+void status4()
+{
+     if(S3==1)
+    {
+      EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x94);
+      delay(5);
+      lcd_data('S');
+      lcd_data('L');
+      lcd_data('0');
+      lcd_data('T');
+      lcd_data('3');
+      lcd_data('=');
+      lcd_data('F');
+      lcd_data('I');
+      lcd_data('L');
+      lcd_data('L');
+      lcd_data('E');
+      lcd_data('D');
+      
+    }
+     else
+    {
+        EN =0;
+      delay(5);
+      lcd_cmd(0x38);
+      delay(5);
+      lcd_cmd(0x0C);
+      delay(5);
+      lcd_cmd(0x94);
+      delay(5);
+      lcd_data('S');
+      lcd_data('L');
+      lcd_data('0');
+      lcd_data('T');
+      lcd_data('3');
+      lcd_data('=');
+      lcd_data('E');
+      lcd_data('M');
+      lcd_data('P');
+      lcd_data('T');
+      lcd_data('Y');
+      lcd_data(' ');
+    }
+}
+void clk()
+{
+    if(F1==0&&F2==0)
+    {
+ 
+         
+         c2=1;    
+         c1=0;
+    }
+    
+}
+void anti()
+{
+    if(F1==1||F2==1)
+    {     
+        c1=1;
+        c2=0;  
+        
+    }
+   
+}
+
+  
